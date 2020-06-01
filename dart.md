@@ -69,7 +69,7 @@ class Spacecraft {
   ```
 
 - Futures y Async
-  ```  
+  ```   
   // Futures
   const oneSecond = Duration(seconds: 1);
   Future<void> printWithDelay(String message) async {
