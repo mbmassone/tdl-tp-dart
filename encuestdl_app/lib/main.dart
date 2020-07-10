@@ -1,16 +1,16 @@
+import 'package:encuestdl_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'screen/PantallaInicio.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      primaryColor: Colors.blueGrey[700],
+      primaryColor: Constants.grisPrimario,
     ),
     home: Container(
       child: PantallaInicio(),
     ),
   ));
-
-  //runApp(PantallaEncuesta(1234));
 }

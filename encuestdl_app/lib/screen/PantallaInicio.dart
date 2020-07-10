@@ -1,3 +1,4 @@
+import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/screen/PantallaCrearEncuesta.dart';
 import 'package:encuestdl_app/screen/Template.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
           Container(
             height: 125,
             child: Center(
-              child: Text("¡Bienvenido!",
+              child: Text("¡Bienvenassasido!",
                   textAlign: TextAlign.center, textScaleFactor: 1.5),
             ),
           ),
@@ -56,7 +57,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 builder: (context) => PantallaCrearEncuesta()),
           )
         },
-        backgroundColor: Colors.blueGrey[700],
+        backgroundColor: Constants.grisPrimario,
         child: const Icon(Icons.play_arrow),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/screen/Template.dart';
 import 'package:encuestdl_app/widget/NuevaPreguntaWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,6 @@ class PantallaCrearEncuesta extends StatefulWidget {
 }
 
 class _PantallaCrearEncuestaState extends State<PantallaCrearEncuesta> {
-
   List<NuevaPreguntaWidget> _list = List();
 
   @override
@@ -17,9 +17,7 @@ class _PantallaCrearEncuestaState extends State<PantallaCrearEncuesta> {
     return ScreenTemplate(
         title: "Crear encuesta",
         child: Column(
-          children: <Widget>[
-            for (var i in _list) NuevaPreguntaWidget()
-          ],
+          children: <Widget>[for (var i in _list) NuevaPreguntaWidget()],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => {
@@ -27,11 +25,8 @@ class _PantallaCrearEncuestaState extends State<PantallaCrearEncuesta> {
               _list.add(NuevaPreguntaWidget());
             })
           },
-          backgroundColor: Colors.blueGrey[700],
+          backgroundColor: Constants.grisPrimario,
           child: const Icon(Icons.add),
-        )
-    );
+        ));
   }
 }
-
-
