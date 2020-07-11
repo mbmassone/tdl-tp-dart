@@ -6,12 +6,13 @@ import 'package:encuestdl_app/model/Question.dart';
 class QuestionWidget extends StatefulWidget {
   Question question;
   Future<bool> futureQuestionAnswered;
+  final ValueChanged<String> handleOnPressed;
 
-  QuestionWidget.withFuture(Question question, Future<bool> future) {
+  QuestionWidget.withFuture(Question question, Future<bool> future, this.handleOnPressed) {
     this.question = question;
     this.futureQuestionAnswered = future;
   }
-  QuestionWidget(Question question) {
+  QuestionWidget(Question question, this.handleOnPressed) {
     this.question = question;
   }
 
@@ -39,10 +40,6 @@ class _QuestionWidgetState extends State<QuestionWidget> {
      });
    }
 
-   void _confirmQuestion(){
-
-   }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -64,14 +61,15 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                  ListTile(
                    title: Text(option),
                    leading: Radio(
-                     value: option,
+                     value: option,  //TODO MAPPEAR OPCIONES DEL JSON, LA DB USA LA ID DE LA RESPUESTA Y NO LA STRING
+                    //EL METODO _handleOnPressed se implementa en el padre :D!
                      groupValue: _selectedAnswer,
                      onChanged: _updateSelected,
                    ),
                  ),
               // TODO: Aca hay que meter el future builder
               RaisedButton(
-                onPressed: _confirmQuestion,
+                onPressed: () { widget.handleOnPressed(_selectedAnswer);},
                 child: Text('Confirmar', style: TextStyle(fontSize: 20)),
               )
             ],

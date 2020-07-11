@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //                builder: (context) => PantallaCrearEncuesta()),
           )
         },
-        backgroundColor: Constants.grisPrimario,
+        backgroundColor: Constants.primaryGrey,
         child: const Icon(Icons.play_arrow),
       ),
     );

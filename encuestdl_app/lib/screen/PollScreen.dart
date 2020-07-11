@@ -54,12 +54,14 @@ class _PollScreenState extends State<PollScreen> {
     }
   }
 
-  Future<bool> _checkAnswer() async {
+  Future<bool> _checkAnswer(String answer) async {
     final response = await http
-        .patch("https://charlytalavera.com/encuestdl/submit/${this.id}");
+        .patch("https://charlytalavera.com/encuestdl/submit/${this.id}",body: answer);
   }
 
-  void _handleQuestionAnswered(String answer) {}
+  _handleQuestionAnswered(String answer) {
+    _checkAnswer(answer);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class _PollScreenState extends State<PollScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ScreenTemplate(
-              child: QuestionWidget(_poll.questions[actualQuestion]),
+              child: QuestionWidget(_poll.questions[actualQuestion],_handleQuestionAnswered,)
             );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");

@@ -25,7 +25,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
               _list.add(NewQuestionWidget());
             })
           },
-          backgroundColor: Constants.grisPrimario,
+          backgroundColor: Constants.primaryGrey,
           child: const Icon(Icons.add),
         ));
   }

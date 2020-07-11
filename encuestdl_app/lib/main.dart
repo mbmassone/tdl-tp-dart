@@ -7,7 +7,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      primaryColor: Constants.grisPrimario,
+      primaryColor: Constants.primaryGrey,
     ),
     home: Container(
       child: HomeScreen(),

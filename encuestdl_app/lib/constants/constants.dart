@@ -3,6 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Constants {
-  static Color grisPrimario = Colors.blueGrey[700];
-  static String urlBase = 'https://charlytalavera.com/encuestdl';
+  static Color primaryGrey = Colors.blueGrey[700];
+  static String baseUrl = 'https://charlytalavera.com/encuestdl';
 }
