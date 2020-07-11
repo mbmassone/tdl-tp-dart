@@ -1,28 +1,28 @@
 import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/screen/Template.dart';
-import 'package:encuestdl_app/widget/NuevaPreguntaWidget.dart';
+import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PantallaCrearEncuesta extends StatefulWidget {
+class CreatePollScreen extends StatefulWidget {
   @override
-  State<PantallaCrearEncuesta> createState() => _PantallaCrearEncuestaState();
+  State<CreatePollScreen> createState() => _CreatePollScreenState();
 }
 
-class _PantallaCrearEncuestaState extends State<PantallaCrearEncuesta> {
-  List<NuevaPreguntaWidget> _list = List();
+class _CreatePollScreenState extends State<CreatePollScreen> {
+  List<NewQuestionWidget> _list = List();
 
   @override
   Widget build(BuildContext context) {
     return ScreenTemplate(
         title: "Crear encuesta",
         child: Column(
-          children: <Widget>[for (var i in _list) NuevaPreguntaWidget()],
+          children: <Widget>[for (var i in _list) NewQuestionWidget()],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => {
             this.setState(() {
-              _list.add(NuevaPreguntaWidget());
+              _list.add(NewQuestionWidget());
             })
           },
           backgroundColor: Constants.grisPrimario,

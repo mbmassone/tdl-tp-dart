@@ -1,17 +1,17 @@
 import 'package:encuestdl_app/constants/constants.dart';
-import 'package:encuestdl_app/screen/PantallaCrearEncuesta.dart';
+import 'package:encuestdl_app/screen/CreatePollScreen.dart';
 import 'package:encuestdl_app/screen/Template.dart';
 import 'package:flutter/material.dart';
 
-import 'PantallaEncuesta.dart';
+import 'PollScreen.dart';
 
-class PantallaInicio extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _PantallaInicioState createState() => _PantallaInicioState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _PantallaInicioState extends State<PantallaInicio> {
-  int id_encuesta = null;
+class _HomeScreenState extends State<HomeScreen> {
+  int pollId = null;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
           Navigator.push(
             context,
             MaterialPageRoute(
-//                builder: (context) => PantallaEncuesta(id_encuesta)),
-                builder: (context) => PantallaCrearEncuesta()),
+                builder: (context) => PollScreen(pollId)),
+//                builder: (context) => PantallaCrearEncuesta()),
           )
         },
         backgroundColor: Constants.grisPrimario,
@@ -65,7 +65,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   void _updateId(String id) {
     setState(() {
-      id_encuesta = int.parse(id);
+      pollId = int.parse(id);
     });
   }
 }

@@ -1,7 +1,7 @@
 import 'package:encuestdl_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'screen/PantallaInicio.dart';
+import 'screen/HomeScreen.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -10,7 +10,7 @@ void main() {
       primaryColor: Constants.grisPrimario,
     ),
     home: Container(
-      child: PantallaInicio(),
+      child: HomeScreen(),
     ),
   ));
 }
