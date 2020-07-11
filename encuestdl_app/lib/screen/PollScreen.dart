@@ -1,7 +1,8 @@
 import 'dart:convert';
 
+import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/model/Poll.dart';
-import 'package:encuestdl_app/screen/Template.dart';
+import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:encuestdl_app/widget/QuestionWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +41,7 @@ class _PollScreenState extends State<PollScreen> {
 
   Future<Poll> fetchPoll() async {
     final response =
-        await http.get("https://charlytalavera.com/encuestdl/poll/${this.id}");
+        await http.get(Constants.baseUrl + '/poll/${this.id}');
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -56,7 +57,7 @@ class _PollScreenState extends State<PollScreen> {
 
   Future<bool> _checkAnswer(String answer) async {
     final response = await http
-        .patch("https://charlytalavera.com/encuestdl/submit/${this.id}",body: answer);
+        .patch(Constants.baseUrl + '/submit/${this.id}',body: answer);
   }
 
   _handleQuestionAnswered(String answer) {

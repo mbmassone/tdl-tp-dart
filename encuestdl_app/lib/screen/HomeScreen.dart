@@ -1,6 +1,6 @@
 import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/screen/CreatePollScreen.dart';
-import 'package:encuestdl_app/screen/Template.dart';
+import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:flutter/material.dart';
 
 import 'PollScreen.dart';
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             height: 125,
             child: Center(
-              child: Text("¡Bienvenassasido!",
+              child: Text("¡Bienvenido!",
                   textAlign: TextAlign.center, textScaleFactor: 1.5),
             ),
           ),

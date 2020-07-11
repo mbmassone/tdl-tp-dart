@@ -1,5 +1,5 @@
 import 'package:encuestdl_app/constants/constants.dart';
-import 'package:encuestdl_app/screen/Template.dart';
+import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
