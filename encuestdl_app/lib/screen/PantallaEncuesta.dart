@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:encuestdl_app/model.dart';
+import 'package:encuestdl_app/model/encuesta.dart';
 import 'package:encuestdl_app/screen/Template.dart';
 import 'package:encuestdl_app/widget/PreguntaWidget.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +26,11 @@ class _PantallaEncuestaState extends State<PantallaEncuesta> {
   int preguntaActual = 0;
   Future<Encuesta> futureEncuesta;
 
-  @override
-  void initState() {
-    super.initState();
-    futureEncuesta = fetchEncuesta();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureEncuesta = fetchEncuesta();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +52,18 @@ class _PantallaEncuestaState extends State<PantallaEncuesta> {
         });
   }
 
-  Future<Encuesta> fetchEncuesta() async {
-    final response = await http.get('https://google.com');
+  // Future<Encuesta> fetchEncuesta() async {
+  //   final response = await http.get('https://google.com');
 
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Encuesta.fromJson(json.decode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     // If the server did return a 200 OK response,
+  //     // then parse the JSON.
+  //     return Encuesta.fromJson(json.decode(response.body));
+  //   } else {
+  //     // If the server did not return a 200 OK response,
+  //     // then throw an exception.
+  //     throw Exception('Failed to load album');
+  //   }
+  // }
 
 }

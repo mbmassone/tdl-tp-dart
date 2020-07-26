@@ -32,6 +32,7 @@ class _PantallaInicioEncuestaState extends State<PantallaInicioEncuesta> {
             ),
           ),
           Container(
+            //height: 100,
             child: Center(
               child: TextField(
                 controller: _controller,

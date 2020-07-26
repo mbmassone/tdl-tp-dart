@@ -6,7 +6,8 @@ class ScreenTemplate extends StatelessWidget {
   FloatingActionButton fab;
   String title;
 
-  ScreenTemplate({Widget child, FloatingActionButton floatingActionButton, String title}) {
+  ScreenTemplate(
+      {Widget child, FloatingActionButton floatingActionButton, String title}) {
     this.child = child;
     this.fab = floatingActionButton;
     this.title = title;
