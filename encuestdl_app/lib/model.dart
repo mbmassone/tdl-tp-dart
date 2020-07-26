@@ -13,6 +13,10 @@ class Encuesta {
 //      preguntas: for pregunta json[''], // json array
     );
   }
+
+  void agregarPregunta(Pregunta pregunta) => preguntas.add(pregunta);
+
+
 }
 
 class Pregunta {
@@ -30,6 +34,9 @@ class Pregunta {
 //      pregunta: json['id'],
     );
   }
+
+  void agregarRespuesta(Respuesta respuesta) => respuestas.add(respuesta);
+
 }
 
 

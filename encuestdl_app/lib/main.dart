@@ -1,6 +1,9 @@
+import 'package:encuestdl_app/screen/PantallaCrearEncuesta.dart';
+import 'package:encuestdl_app/screen/PantallaFinCreacionEncuesta.dart';
+import 'package:encuestdl_app/screen/PantallaSeleccionInicio.dart';
 import 'package:flutter/material.dart';
 
-import 'screen/PantallaInicio.dart';
+import 'screen/PantallaInicioEncuesta.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -8,8 +11,15 @@ void main() {
       primaryColor: Colors.blueGrey[700],
     ),
     home: Container(
-      child: PantallaInicio(),
+      child: PantallaSeleccionInicio(),
     ),
+    routes: <String, WidgetBuilder>{
+      '/inicioResolverEncuesta': (BuildContext context) => new PantallaInicioEncuesta(),
+      '/inicioCrearEncuesta': (BuildContext context) =>
+          new PantallaCrearEncuesta(),
+      '/finCreacionEncuesta': (BuildContext context) =>
+          new PantallaFinCreacionEncuesta(),
+    },
   ));
 
   //runApp(PantallaEncuesta(1234));

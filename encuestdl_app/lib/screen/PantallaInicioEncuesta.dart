@@ -1,16 +1,16 @@
-import 'package:encuestdl_app/screen/PantallaCrearEncuesta.dart';
 import 'package:encuestdl_app/screen/Template.dart';
 import 'package:flutter/material.dart';
 
 import 'PantallaEncuesta.dart';
 
-class PantallaInicio extends StatefulWidget {
+class PantallaInicioEncuesta extends StatefulWidget {
   @override
-  _PantallaInicioState createState() => _PantallaInicioState();
+  _PantallaInicioEncuestaState createState() => _PantallaInicioEncuestaState();
 }
 
-class _PantallaInicioState extends State<PantallaInicio> {
+class _PantallaInicioEncuestaState extends State<PantallaInicioEncuesta> {
   int id_encuesta = null;
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +32,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
             ),
           ),
           Container(
-            //height: 100,
             child: Center(
               child: TextField(
+                controller: _controller,
                 obscureText: false,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -49,12 +49,14 @@ class _PantallaInicioState extends State<PantallaInicio> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-//                builder: (context) => PantallaEncuesta(id_encuesta)),
-                builder: (context) => PantallaCrearEncuesta()),
-          )
+          if (_controller.text.isNotEmpty)
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PantallaEncuesta(id_encuesta)),
+              ),
+            },
         },
         backgroundColor: Colors.blueGrey[700],
         child: const Icon(Icons.play_arrow),
