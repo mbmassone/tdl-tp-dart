@@ -1,15 +1,15 @@
-import 'package:encuestdl_app/screen/Template.dart';
+import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PantallaFinCreacionEncuesta extends StatefulWidget {
+class PollCreationFinishScreen extends StatefulWidget {
   @override
-  State<PantallaFinCreacionEncuesta> createState() =>
-      _PantallaFinCreacionEncuestaState();
+  State<PollCreationFinishScreen> createState() =>
+      _PollCreationFinishScreenState();
 }
 
-class _PantallaFinCreacionEncuestaState
-    extends State<PantallaFinCreacionEncuesta> {
+class _PollCreationFinishScreenState
+    extends State<PollCreationFinishScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenTemplate(

@@ -1,15 +1,17 @@
-import 'package:encuestdl_app/screen/Template.dart';
+import 'package:encuestdl_app/constants/constants.dart';
+import 'package:encuestdl_app/screen/CreatePollScreen.dart';
+import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:flutter/material.dart';
 
-import 'PantallaEncuesta.dart';
+import 'PollScreen.dart';
 
-class PantallaInicioEncuesta extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _PantallaInicioEncuestaState createState() => _PantallaInicioEncuestaState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _PantallaInicioEncuestaState extends State<PantallaInicioEncuesta> {
-  int id_encuesta = null;
+class _HomeScreenState extends State<HomeScreen> {
+  int pollId = null;
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -46,28 +48,34 @@ class _PantallaInicioEncuestaState extends State<PantallaInicioEncuesta> {
               ),
             ),
           ),
+          RaisedButton(
+            child: Text(
+              "Jugar",
+              style: TextStyle(color: Colors.white),
+            ),
+            color: Colors.blueGrey[700],
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PollScreen(pollId)),
+              )
+            },
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          if (_controller.text.isNotEmpty)
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PantallaEncuesta(id_encuesta)),
-              ),
-            },
+          Navigator.pushNamed(context, '/poll/create'),
         },
-        backgroundColor: Colors.blueGrey[700],
-        child: const Icon(Icons.play_arrow),
+        backgroundColor: Constants.primaryGrey,
+        child: const Icon(Icons.add),
       ),
     );
   }
 
   void _updateId(String id) {
     setState(() {
-      id_encuesta = int.parse(id);
+      pollId = int.parse(id);
     });
   }
 }

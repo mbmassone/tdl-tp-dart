@@ -1,19 +1,21 @@
 import 'package:encuestdl_app/constants/constants.dart';
-import 'package:encuestdl_app/screen/Template.dart';
-import 'package:encuestdl_app/widget/NuevaEncuestaWidget.dart';
+import 'package:encuestdl_app/screen/ScreenTemplate.dart';
+import 'package:encuestdl_app/widget/PollDataWidget.dart';
+import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'PantallaLlenarEncuesta.dart';
 
-class PantallaCrearEncuesta extends StatefulWidget {
+class CreatePollScreen extends StatefulWidget {
   @override
-  State<PantallaCrearEncuesta> createState() => _PantallaCrearEncuestaState();
+  State<CreatePollScreen> createState() => _CreatePollScreenState();
 }
 
-class _PantallaCrearEncuestaState extends State<PantallaCrearEncuesta> {
-  List<NuevaEncuestaWidget> _list = List();
-  NuevaEncuestaWidget pregunta = NuevaEncuestaWidget();
+class _CreatePollScreenState extends State<CreatePollScreen> {
+  List<NewQuestionWidget> _list = List();
+  PollDataWidget pregunta = PollDataWidget();
+  // TODO: Convertir PantallaLlenarEncuesta a "NewQuestionWidget" e ir generando una lista de preguntas
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class _PantallaCrearEncuestaState extends State<PantallaCrearEncuesta> {
       title: "Crear encuesta",
       child: Column(
         children: <Widget>[
+          PollDataWidget(),
           Container(
             alignment: Alignment.center,
             child: pregunta,
