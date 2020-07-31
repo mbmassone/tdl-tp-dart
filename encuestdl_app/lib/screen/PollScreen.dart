@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/model/Poll.dart';
+import 'package:encuestdl_app/model/Submit.dart';
 import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:encuestdl_app/widget/QuestionWidget.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class _PollScreenState extends State<PollScreen> {
 
   Future<Poll> futurePoll;
   Poll _poll;
+  Submit _submit;
 
   Future<bool> futureQuestionAnswered;
   bool _questionAnswered;
@@ -37,6 +39,16 @@ class _PollScreenState extends State<PollScreen> {
   void initState() {
     super.initState();
     futurePoll = fetchPoll();
+    createNewSubmit();
+  }
+  Future<void> createNewSubmit() async{
+    final newSubitResponse = await http.post( Constants.baseUrl + '/submits', body:{
+      "submitter": "anonymous", //TODO: Create input to get submitter name.
+      "poll": this.id.toString()
+    });
+
+    _submit =  Submit.fromJson(json.decode(newSubitResponse.body));
+    print(json.decode(newSubitResponse.body));
   }
 
   Future<Poll> fetchPoll() async {
@@ -57,8 +69,9 @@ class _PollScreenState extends State<PollScreen> {
 
   Future<bool> _checkAnswer(int answer) async {
     // TODO: Corregir este servicio, el body debe ser un json
+
     final response = await http
-        .patch(Constants.baseUrl + '/submit/${this.id}',body: answer);
+        .patch(Constants.baseUrl + '/submit/${_submit.id}',body: {"response": (answer + 1).toString()});
   }
 
   _handleQuestionAnswered(int answer) {
