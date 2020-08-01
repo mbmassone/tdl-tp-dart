@@ -10,21 +10,24 @@ import 'package:http/http.dart' as http;
 
 class PollScreen extends StatefulWidget {
   int id;
+  String name;
 
-  PollScreen(int id) {
+  PollScreen(int id, String name) {
     this.id = id;
+    this.name = name;
   }
 
   @override
-  State createState() => _PollScreenState(id);
+  State createState() => _PollScreenState(id, name);
 }
 
 class _PollScreenState extends State<PollScreen> {
-  _PollScreenState(int id) {
+  _PollScreenState(int id, String name) {
     this.id = id;
   }
 
   int id;
+  String name;
   int actualQuestion = 0;
   bool answered = false;
 
@@ -43,7 +46,7 @@ class _PollScreenState extends State<PollScreen> {
   }
   Future<void> createNewSubmit() async{
     final newSubitResponse = await http.post( Constants.baseUrl + '/submits', body:{
-      "submitter": "anonymous", //TODO: Create input to get submitter name.
+      "submitter": name,
       "poll": this.id.toString()
     });
 
@@ -61,17 +64,25 @@ class _PollScreenState extends State<PollScreen> {
       _poll = Poll.fromJson(json.decode(response.body));
       return _poll;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("Error al obtener la encuesta")));
+      Navigator.pop(context);
     }
   }
 
   Future<bool> _checkAnswer(int answer) async {
-    // TODO: Corregir este servicio, el body debe ser un json
-
     final response = await http
         .patch(Constants.baseUrl + '/submit/${_submit.id}',body: {"response": (answer + 1).toString()});
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return true;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
   }
 
   _handleQuestionAnswered(int answer) {

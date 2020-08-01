@@ -1,7 +1,6 @@
+import 'package:encuestdl_app/model/Question.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:encuestdl_app/model/Question.dart';
 
 class QuestionWidget extends StatefulWidget {
   Question question;
