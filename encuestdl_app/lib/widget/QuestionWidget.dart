@@ -6,6 +6,7 @@ class QuestionWidget extends StatefulWidget {
   Question question;
   Future<bool> futureQuestionAnswered;
   final ValueChanged<int> submitAction;
+  _QuestionWidgetState state;
 
   QuestionWidget.withFuture(
       Question question, Future<bool> future, this.submitAction) {
@@ -17,8 +18,12 @@ class QuestionWidget extends StatefulWidget {
     this.question = question;
   }
 
+  updateQuestion(Question question) {
+    state._updateQuestion(question);
+  }
+
   @override
-  State<QuestionWidget> createState() => _QuestionWidgetState(question);
+  State<QuestionWidget> createState() => state = _QuestionWidgetState(question);
 }
 
 class _QuestionWidgetState extends State<QuestionWidget> {
@@ -38,6 +43,12 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   void _updateSelected(String selected) {
     setState(() {
       _selectedAnswer = selected;
+    });
+  }
+
+  _updateQuestion(Question question){
+    setState(() {
+      this._question = question;
     });
   }
 
