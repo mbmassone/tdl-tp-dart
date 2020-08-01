@@ -21,6 +21,7 @@ class _PollDataWidgetState extends State<PollDataWidget> {
       child: Column(
         children: <Widget>[
           Container(
+            margin: const EdgeInsets.only(top: 20, bottom: 60),
             child: Center(
               child: Text(
                 "Ingrese el nombre de la encuesta:",

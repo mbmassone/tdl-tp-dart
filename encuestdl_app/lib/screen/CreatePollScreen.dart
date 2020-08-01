@@ -5,7 +5,7 @@ import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'PantallaLlenarEncuesta.dart';
+import 'QuestionsCreationScreen.dart';
 
 class CreatePollScreen extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class CreatePollScreen extends StatefulWidget {
 }
 
 class _CreatePollScreenState extends State<CreatePollScreen> {
-  List<NewQuestionWidget> _list = List();
+  //List<NewQuestionWidget> _list = List();
   PollDataWidget pregunta = PollDataWidget();
   // TODO: Convertir PantallaLlenarEncuesta a "NewQuestionWidget" e ir generando una lista de preguntas
 
@@ -23,11 +23,13 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
       title: "Crear encuesta",
       child: Column(
         children: <Widget>[
-          PollDataWidget(),
+          //PollDataWidget(),
           Container(
+            margin: const EdgeInsets.only(top: 50, bottom: 0),
             alignment: Alignment.center,
             child: pregunta,
           ),
+
           RaisedButton(
             child: Text(
               "Siguiente",
@@ -36,15 +38,14 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
             color: Colors.blueGrey[700],
             onPressed: () => {
               //_chequeoNombre(context, _controller.text)
-              if (pregunta.textIsNotEmpty())
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-//                    builder: (context) => PantallaEncuesta(id_encuesta)),
-                        builder: (context) => PantallaLlenarEncuesta(1)),
-                  ),
-                },
+              if (pregunta.textIsNotEmpty()){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+//                builder: (context) => PantallaEncuesta(id_encuesta)),
+                  builder: (context) => QuestionsCreationScreen(1)),
+                ),
+              },
             },
           ),
         ],
