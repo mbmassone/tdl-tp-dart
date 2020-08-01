@@ -24,6 +24,7 @@ class PollScreen extends StatefulWidget {
 class _PollScreenState extends State<PollScreen> {
   _PollScreenState(int id, String name) {
     this.id = id;
+    this.name = name;
   }
 
   int id;
@@ -37,6 +38,8 @@ class _PollScreenState extends State<PollScreen> {
 
   Future<bool> futureQuestionAnswered;
   bool _questionAnswered;
+
+  QuestionWidget questionWidget;
 
   @override
   void initState() {
@@ -62,6 +65,7 @@ class _PollScreenState extends State<PollScreen> {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       _poll = Poll.fromJson(json.decode(response.body));
+      questionWidget = QuestionWidget(_poll.questions[actualQuestion],_handleQuestionAnswered,);
       return _poll;
     } else {
       Scaffold.of(context)
@@ -85,8 +89,17 @@ class _PollScreenState extends State<PollScreen> {
     }
   }
 
-  _handleQuestionAnswered(int answer) {
-    _checkAnswer(answer);
+  _handleQuestionAnswered(int answer) async{
+    bool succesful = await _checkAnswer(answer);
+
+    if(actualQuestion + 1 >= _poll.questions.length)
+      return;
+    questionWidget.updateQuestion(_poll.questions[actualQuestion+1]);
+
+    setState(() {
+      actualQuestion = actualQuestion + 1;
+    });
+
   }
 
   @override
@@ -96,7 +109,7 @@ class _PollScreenState extends State<PollScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ScreenTemplate(
-              child: QuestionWidget(_poll.questions[actualQuestion],_handleQuestionAnswered,)
+              child: questionWidget
             );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
