@@ -5,50 +5,63 @@ import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'QuestionsCreationScreen.dart';
-
 class CreatePollScreen extends StatefulWidget {
   @override
   State<CreatePollScreen> createState() => _CreatePollScreenState();
 }
 
 class _CreatePollScreenState extends State<CreatePollScreen> {
-  //List<NewQuestionWidget> _list = List();
-  PollDataWidget pregunta = PollDataWidget();
-  // TODO: Convertir PantallaLlenarEncuesta a "NewQuestionWidget" e ir generando una lista de preguntas
+  PollDataWidget _pollName = PollDataWidget();
+  NewQuestionWidget _questions = NewQuestionWidget();
 
   @override
   Widget build(BuildContext context) {
     return ScreenTemplate(
       title: "Crear encuesta",
-      child: Column(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          _questions.addNewQuestion(),
+        },
+        backgroundColor: Constants.primaryGrey,
+        child: const Icon(Icons.arrow_right),
+      ),
+      child: ListView(
         children: <Widget>[
-          //PollDataWidget(),
-          Container(
-            margin: const EdgeInsets.only(top: 50, bottom: 0),
-            alignment: Alignment.center,
-            child: pregunta,
-          ),
-
+          _pollName,
+          _questions,
           RaisedButton(
             child: Text(
-              "Siguiente",
+              "Finalizar",
               style: TextStyle(color: Colors.white),
             ),
             color: Colors.blueGrey[700],
-            onPressed: () => {
-              //_chequeoNombre(context, _controller.text)
-              if (pregunta.textIsNotEmpty()){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-//                builder: (context) => PantallaEncuesta(id_encuesta)),
-                  builder: (context) => QuestionsCreationScreen(1)),
-                ),
-              },
+            onPressed: () {
+              /*if(!_pollName.textIsNotEmpty())
+                _noNameShowDialog();
+              */
+              _finish(context);
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Future _finish(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Encuesta creada correctamente'),
+        content: RaisedButton(
+          child: Text(
+            "Volver a pantalla de inicio",
+            style: TextStyle(color: Colors.black),
+          ),
+          onPressed: () => {
+            Navigator.pop(context), //Todo acomodar esto
+            Navigator.pop(context),
+          },
+        ),
       ),
     );
   }

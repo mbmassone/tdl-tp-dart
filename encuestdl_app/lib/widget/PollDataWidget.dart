@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PollDataWidget extends StatefulWidget {
-  _PollDataWidgetState nuevaEncuesta = _PollDataWidgetState();
+  _PollDataWidgetState _newPollData;
 
   @override
-  State<PollDataWidget> createState() => nuevaEncuesta;
+  State<PollDataWidget> createState() => _newPollData = _PollDataWidgetState();
 
   bool textIsNotEmpty() {
-    return nuevaEncuesta._controllerIsNotEmpty();
+    return _newPollData._controllerIsNotEmpty();
   }
 }
 
@@ -21,7 +21,7 @@ class _PollDataWidgetState extends State<PollDataWidget> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.only(top: 20, bottom: 60),
+            margin: const EdgeInsets.only(top: 20, bottom: 20),
             child: Center(
               child: Text(
                 "Ingrese el nombre de la encuesta:",
@@ -30,14 +30,12 @@ class _PollDataWidgetState extends State<PollDataWidget> {
               ),
             ),
           ),
-          Container(
-            child: TextField(
-              controller: _controller,
-              obscureText: false,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Nombre de encuesta',
-              ),
+          TextField(
+            controller: _controller,
+            obscureText: false,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Nombre de encuesta',
             ),
           ),
         ],

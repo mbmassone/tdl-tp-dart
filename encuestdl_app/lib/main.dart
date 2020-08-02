@@ -1,5 +1,4 @@
 import 'package:encuestdl_app/screen/CreatePollScreen.dart';
-import 'package:encuestdl_app/screen/PollCreationFinishScreen.dart';
 import 'package:encuestdl_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,6 @@ void main() {
     ),
     routes: <String, WidgetBuilder>{
       '/poll/create': (BuildContext context) => new CreatePollScreen(),
-      '/poll/creation-finished': (BuildContext context) => new PollCreationFinishScreen(),
     },
   ));
 }

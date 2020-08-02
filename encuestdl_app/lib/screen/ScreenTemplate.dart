@@ -17,7 +17,6 @@ class ScreenTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //leading: IconButton(icon:Icon(Icons.chevron_left),/*onPressed:() => /Navigator.pop(context, false),*/),
         title: Text(title != null ? title : "EncuesTDL"),
       ),
       body: child,
