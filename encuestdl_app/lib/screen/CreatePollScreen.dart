@@ -36,10 +36,12 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
             ),
             color: Colors.blueGrey[700],
             onPressed: () {
-              /*if(!_pollName.textIsNotEmpty())
+              if(_pollName.textIsEmpty())
                 _noNameShowDialog();
-              */
-              _finish(context);
+              else if(_questions.noQuestions() || _questions.noOneQuestionFull())
+                _noQuestionsShowDialog();
+              else
+                _finishShowDialog(context);
             },
           ),
         ],
@@ -47,18 +49,54 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     );
   }
 
-  Future _finish(BuildContext context) {
+  Future _noNameShowDialog(){
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Encuesta creada correctamente'),
+        title: Text('Debes ponerle un nombre a tu encuesta'),
+        content: RaisedButton(
+          child: Text(
+            "Volver",
+            style: TextStyle(color: Colors.black),
+          ),
+          onPressed: () => {
+            Navigator.pop(context),
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _noQuestionsShowDialog(){
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('La encuesta debe tener al menos una pregunta completa'),
+        content: RaisedButton(
+          child: Text(
+            "Volver",
+            style: TextStyle(color: Colors.black),
+          ),
+          onPressed: () => {
+            Navigator.pop(context),
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _finishShowDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('¡Encuesta creada correctamente!'),
         content: RaisedButton(
           child: Text(
             "Volver a pantalla de inicio",
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () => {
-            Navigator.pop(context), //Todo acomodar esto
+            Navigator.pop(context), //TODO acomodar esto
             Navigator.pop(context),
           },
         ),

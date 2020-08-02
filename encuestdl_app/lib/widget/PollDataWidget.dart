@@ -7,8 +7,8 @@ class PollDataWidget extends StatefulWidget {
   @override
   State<PollDataWidget> createState() => _newPollData = _PollDataWidgetState();
 
-  bool textIsNotEmpty() {
-    return _newPollData._controllerIsNotEmpty();
+  bool textIsEmpty() {
+    return _newPollData._controllerIsEmpty();
   }
 }
 
@@ -43,7 +43,7 @@ class _PollDataWidgetState extends State<PollDataWidget> {
     );
   }
 
-  bool _controllerIsNotEmpty() {
-    return _controller.text.isNotEmpty;
+  bool _controllerIsEmpty() {
+    return _controller.text.isEmpty;
   }
 }
