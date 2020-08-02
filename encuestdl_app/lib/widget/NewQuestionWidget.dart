@@ -8,12 +8,16 @@ class NewQuestionWidget extends StatefulWidget {
   State<NewQuestionWidget> createState() =>
       _newQuestionState = _NewQuestionWidgetState();
 
-  bool noQuestions(){
+  bool noQuestions() {
     return _newQuestionState._noQuestions();
   }
 
-  bool noOneQuestionFull(){
+  bool noOneQuestionFull() {
     return _newQuestionState._noOneQuestionFull();
+  }
+
+  bool questionsWithCorrectOptionError(){
+    return _newQuestionState._questionsWithCorrectOptionError();
   }
 
   void addNewQuestion() {
@@ -46,16 +50,24 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
     );
   }
 
-  bool _noQuestions(){
+  bool _noQuestions() {
     return (_list.length == 0);
   }
 
-  bool _noOneQuestionFull(){
+  bool _noOneQuestionFull() {
     bool returnValue = true;
 
-    for(var i in _list)
+    for (var i in _list) if (i.questionAndTwoOptionsFull()) returnValue = false;
+
+    return returnValue;
+  }
+
+  bool _questionsWithCorrectOptionError(){
+    bool returnValue = false;
+
+    for (var i in _list)
       if(i.questionAndTwoOptionsFull())
-        returnValue = false;
+        if (i.individualQuestionsWithCorrectOptionError()) returnValue = true;
 
     return returnValue;
   }
@@ -65,6 +77,13 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
     setState(() {});
   }
 }
+
+
+
+
+
+
+
 
 class IndividualQuestionWidget extends StatefulWidget {
   int questionNumber;
@@ -79,8 +98,12 @@ class IndividualQuestionWidget extends StatefulWidget {
   State<IndividualQuestionWidget> createState() =>
       _individualQuestion = _IndividualQuestionWidgetState(questionNumber);
 
-  bool questionAndTwoOptionsFull(){
+  bool questionAndTwoOptionsFull() {
     return _individualQuestion._questionAndTwoOptionsFull();
+  }
+
+  bool individualQuestionsWithCorrectOptionError(){
+    return _individualQuestion._individualQuestionsWithCorrectOptionError();
   }
 }
 
@@ -91,6 +114,11 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
   TextEditingController _controller2 = TextEditingController();
   TextEditingController _controller3 = TextEditingController();
   TextEditingController _controller4 = TextEditingController();
+  
+  CorrectOptionButtonWidget _correctOptionButton1 = CorrectOptionButtonWidget();
+  CorrectOptionButtonWidget _correctOptionButton2 = CorrectOptionButtonWidget();
+  CorrectOptionButtonWidget _correctOptionButton3 = CorrectOptionButtonWidget();
+  CorrectOptionButtonWidget _correctOptionButton4 = CorrectOptionButtonWidget();
 
   _IndividualQuestionWidgetState(int questionNumber) {
     this.questionNumber = questionNumber;
@@ -119,19 +147,27 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
                   TextField(
                       controller: _controller1,
                       obscureText: false,
-                      decoration: InputDecoration(labelText: 'Opción 1')),
+                      decoration: InputDecoration(
+                          labelText: 'Opción 1',
+                          suffixIcon: _correctOptionButton1)),
                   TextField(
                       controller: _controller2,
                       obscureText: false,
-                      decoration: InputDecoration(labelText: 'Opción 2')),
+                      decoration: InputDecoration(
+                          labelText: 'Opción 2',
+                          suffixIcon: _correctOptionButton2)),
                   TextField(
                       controller: _controller3,
                       obscureText: false,
-                      decoration: InputDecoration(labelText: 'Opción 3')),
+                      decoration: InputDecoration(
+                          labelText: 'Opción 3',
+                          suffixIcon: _correctOptionButton3)),
                   TextField(
                       controller: _controller4,
                       obscureText: false,
-                      decoration: InputDecoration(labelText: 'Opción 4')),
+                      decoration: InputDecoration(
+                          labelText: 'Opción 4',
+                          suffixIcon: _correctOptionButton4)),
                 ],
               ),
             ),
@@ -141,21 +177,89 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
     );
   }
 
-  bool _twoOptionsFull(){
+  bool _twoOptionsFull() {
     int optionsFull = 0;
-    if(_controller1.text.isNotEmpty) optionsFull++;
-    if(_controller2.text.isNotEmpty) optionsFull++;
-    if(_controller3.text.isNotEmpty) optionsFull++;
-    if(_controller4.text.isNotEmpty) optionsFull++;
-    
+    if (_controller1.text.isNotEmpty) optionsFull++;
+    if (_controller2.text.isNotEmpty) optionsFull++;
+    if (_controller3.text.isNotEmpty) optionsFull++;
+    if (_controller4.text.isNotEmpty) optionsFull++;
+
     return (optionsFull >= 2);
   }
 
-  bool _questionAndTwoOptionsFull(){
-    return (_controller.text.isNotEmpty && _twoOptionsFull() );
+  bool _questionAndTwoOptionsFull() {
+    return (_controller.text.isNotEmpty && _twoOptionsFull());
   }
 
   bool _controllerIsNotEmpty() {
     return _controller.text.isNotEmpty;
+  }
+
+  bool noCorrectOptionSelected(){
+    return (!_correctOptionButton1.isCorrectOption() && 
+            !_correctOptionButton2.isCorrectOption() &&
+            !_correctOptionButton3.isCorrectOption() &&
+            !_correctOptionButton4.isCorrectOption() );
+  }
+
+  bool invalidAmountOfCorrectOptionsSelected(){
+    int totalOfCorrectOptions = 0;
+    if(_correctOptionButton1.isCorrectOption() && _controller1.text.isNotEmpty) totalOfCorrectOptions++;
+    if(_correctOptionButton2.isCorrectOption() && _controller2.text.isNotEmpty) totalOfCorrectOptions++;
+    if(_correctOptionButton3.isCorrectOption() && _controller3.text.isNotEmpty) totalOfCorrectOptions++;
+    if(_correctOptionButton4.isCorrectOption() && _controller4.text.isNotEmpty) totalOfCorrectOptions++;
+
+    return (totalOfCorrectOptions != 1);
+  }
+
+  bool _individualQuestionsWithCorrectOptionError(){
+    return (invalidAmountOfCorrectOptionsSelected() || noCorrectOptionSelected());
+  }
+}
+
+
+
+
+
+
+
+
+class CorrectOptionButtonWidget extends StatefulWidget {
+  _CorrectOptionButtonWidgetState correctOptionButton;
+
+  @override
+  State<CorrectOptionButtonWidget> createState() => correctOptionButton = _CorrectOptionButtonWidgetState();
+
+  bool isCorrectOption(){
+    return correctOptionButton._isCorrectOption();
+  }
+
+}
+
+class _CorrectOptionButtonWidgetState extends State<CorrectOptionButtonWidget> {
+  Icon _icon = Icon(Icons.clear);
+  bool correctOption = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        icon: _icon,
+        onPressed: () {
+          _setState();
+        });
+  }
+
+  void _setState() {
+    if (correctOption)
+      _icon = Icon(Icons.clear);
+    else
+      _icon = Icon(Icons.check);
+
+    correctOption = !correctOption;
+    setState(() {});
+  }
+
+  bool _isCorrectOption(){
+    return correctOption;
   }
 }

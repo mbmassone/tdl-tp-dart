@@ -40,8 +40,11 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                 _noNameShowDialog();
               else if(_questions.noQuestions() || _questions.noOneQuestionFull())
                 _noQuestionsShowDialog();
+              else if(_questions.questionsWithCorrectOptionError())
+                _questionsWithCorrectOptionErrorShowDialog();
               else
                 _finishShowDialog(context);
+                //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS VALIDAS Y MANDAR AL SERVIDOR
             },
           ),
         ],
@@ -54,6 +57,24 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Debes ponerle un nombre a tu encuesta'),
+        content: RaisedButton(
+          child: Text(
+            "Volver",
+            style: TextStyle(color: Colors.black),
+          ),
+          onPressed: () => {
+            Navigator.pop(context),
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _questionsWithCorrectOptionErrorShowDialog(){
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Hay preguntas en las cual no has marcado una única opción correcta'),
         content: RaisedButton(
           child: Text(
             "Volver",
