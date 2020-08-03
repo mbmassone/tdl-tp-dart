@@ -1,7 +1,5 @@
-import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/screen/ScreenTemplate.dart';
-import 'package:encuestdl_app/widget/PollDataWidget.dart';
-import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
+import 'package:encuestdl_app/widget/IndividualQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,48 +9,92 @@ class CreatePollScreen extends StatefulWidget {
 }
 
 class _CreatePollScreenState extends State<CreatePollScreen> {
-  PollDataWidget _pollName = PollDataWidget();
-  NewQuestionWidget _questions = NewQuestionWidget();
+  TextEditingController _namePollController = TextEditingController();
+  List<IndividualQuestionWidget> _list = List();
 
+  _CreatePollScreenState(){
+    this._list.add(IndividualQuestionWidget(_list.length + 1));
+  }
   @override
   Widget build(BuildContext context) {
     return ScreenTemplate(
       title: "Crear encuesta",
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blueGrey[700],
+        child: const Icon(Icons.live_help),
         onPressed: () => {
-          _questions.addNewQuestion(),
+          _addNewQuestion(),
         },
-        backgroundColor: Constants.primaryGrey,
-        child: const Icon(Icons.arrow_right),
       ),
       child: ListView(
         children: <Widget>[
-          _pollName,
-          _questions,
-          RaisedButton(
-            child: Text(
-              "Finalizar",
-              style: TextStyle(color: Colors.white),
+          Card(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 20, bottom: 20),
+                  child: Center(
+                    child: Text(
+                      "Ingrese el nombre de la encuesta:",
+                      textScaleFactor: 1.5,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: _namePollController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Nombre de encuesta',
+                  ),
+                ),
+                Card(
+                  color: Colors.blueGrey[700],
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(
+                            top: 35, bottom: 15, right: 0, left: 0),
+                        child: Text(
+                          "Preguntas",
+                          textAlign: TextAlign.center,
+                          textScaleFactor: 1.3,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      for (var i in _list) i,
+                      RaisedButton(
+                        child: Text(
+                          "Finalizar",
+                          style: TextStyle(color: Colors.blueGrey[700]),
+                          textScaleFactor: 1.3,
+                        ),
+                        color: Colors.white,
+                        onPressed: () {
+                          if (_namePollController.text.isEmpty)
+                            _noNameShowDialog();
+                          else if (_noQuestions() || _noOneQuestionFull())
+                            _noQuestionsShowDialog();
+                          else if (_questionsWithCorrectOptionError())
+                            _questionsWithCorrectOptionErrorShowDialog();
+                          else
+                            _finishShowDialog(context);
+                          //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS VALIDAS Y MANDAR AL SERVIDOR
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            color: Colors.blueGrey[700],
-            onPressed: () {
-              if(_pollName.textIsEmpty())
-                _noNameShowDialog();
-              else if(_questions.noQuestions() || _questions.noOneQuestionFull())
-                _noQuestionsShowDialog();
-              else if(_questions.questionsWithCorrectOptionError())
-                _questionsWithCorrectOptionErrorShowDialog();
-              else
-                _finishShowDialog(context);
-                //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS VALIDAS Y MANDAR AL SERVIDOR
-            },
           ),
         ],
       ),
     );
   }
 
-  Future _noNameShowDialog(){
+  Future _noNameShowDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -70,11 +112,12 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     );
   }
 
-  Future _questionsWithCorrectOptionErrorShowDialog(){
+  Future _questionsWithCorrectOptionErrorShowDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Hay preguntas en las cual no has marcado su opción correcta'),
+        title:
+            Text('Hay preguntas en las cual no has marcado su opción correcta'),
         content: RaisedButton(
           child: Text(
             "Volver",
@@ -88,7 +131,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     );
   }
 
-  Future _noQuestionsShowDialog(){
+  Future _noQuestionsShowDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -123,5 +166,32 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
         ),
       ),
     );
+  }
+
+  bool _noQuestions() {
+    return (_list.length == 0);
+  }
+
+  bool _noOneQuestionFull() {
+    bool returnValue = true;
+
+    for (var i in _list) if (i.questionAndTwoOptionsFull()) returnValue = false;
+
+    return returnValue;
+  }
+
+  bool _questionsWithCorrectOptionError() {
+    bool returnValue = false;
+
+    for (var i in _list)
+      if (i.questionAndTwoOptionsFull()) if (i
+          .individualQuestionsWithCorrectOptionError()) returnValue = true;
+
+    return returnValue;
+  }
+
+  void _addNewQuestion() {
+    _list.add(IndividualQuestionWidget(_list.length + 1));
+    setState(() {});
   }
 }
