@@ -52,7 +52,6 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
             label: "Volver al inicio",
             onTap: () {
               Navigator.pop(context);
-              Navigator.pop(context);
             },
           ),
           SpeedDialChild(
