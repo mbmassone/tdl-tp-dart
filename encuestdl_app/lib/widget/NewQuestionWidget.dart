@@ -1,29 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class IndividualQuestionWidget extends StatefulWidget {
+class NewQuestionWidget extends StatefulWidget {
   int questionNumber;
 
-  _IndividualQuestionWidgetState _individualQuestion;
+  _NewQuestionWidgetState _newQuestion;
 
-  IndividualQuestionWidget(int questionNumber) {
+  NewQuestionWidget(int questionNumber) {
     this.questionNumber = questionNumber;
   }
 
   @override
-  State<IndividualQuestionWidget> createState() =>
-      _individualQuestion = _IndividualQuestionWidgetState(questionNumber);
+  State<NewQuestionWidget> createState() =>
+      _newQuestion = _NewQuestionWidgetState(questionNumber);
 
   bool questionAndTwoOptionsFull() {
-    return _individualQuestion._questionAndTwoOptionsFull();
+    return _newQuestion._questionAndTwoOptionsFull();
   }
 
-  bool individualQuestionsWithCorrectOptionError() {
-    return _individualQuestion.noCorrectOptionSelected();
+  bool questionsWithCorrectOptionError() {
+    return _newQuestion.noCorrectOptionSelected();
   }
 }
 
-class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
+class _NewQuestionWidgetState extends State<NewQuestionWidget> {
   int questionNumber;
   TextEditingController _questionController = TextEditingController();
   TextEditingController _option1Controller = TextEditingController();
@@ -33,7 +33,7 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
 
   int correctOption = 0;
 
-  _IndividualQuestionWidgetState(int questionNumber) {
+  _NewQuestionWidgetState(int questionNumber) {
     this.questionNumber = questionNumber;
   }
 
@@ -41,20 +41,27 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        height: 300,
+        height: 250,
         child: Column(
           children: <Widget>[
-            TextField(
-              controller: _questionController,
-              obscureText: false,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              child: TextField(
+                controller: _questionController,
+                obscureText: false,
+                decoration: InputDecoration(
+                  //border: OutlineInputBorder(),
                   labelText: "Pregunta $questionNumber",
-                  //labelStyle: TextStyle(fontSize: 0.1),
-                  prefixIcon: const Icon(Icons.live_help)),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                  prefixIcon: Icon(
+                    Icons.help_outline,
+                    color: Colors.green[500],
+                  ),
+                ),
+              ),
             ),
             Container(
-              margin: const EdgeInsets.only(right: 20, left: 20),
+              margin: const EdgeInsets.only(right: 20, left: 20, bottom: 0.01),
               child: Column(
                 children: <Widget>[
                   TextField(
@@ -62,10 +69,11 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 1',
-                      suffixIcon: Radio(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      prefixIcon: Radio(
                         value: 1,
                         groupValue: correctOption,
-                        activeColor: Colors.blueGrey[700],
+                        activeColor: Colors.green[500],
                         onChanged: (newValue) {
                           setState(() {
                             correctOption = newValue;
@@ -79,10 +87,11 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 2',
-                      suffixIcon: Radio(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      prefixIcon: Radio(
                         value: 2,
                         groupValue: correctOption,
-                        activeColor: Colors.blueGrey[700],
+                        activeColor: Colors.green[500],
                         onChanged: (newValue) {
                           setState(() {
                             correctOption = newValue;
@@ -96,10 +105,11 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 3',
-                      suffixIcon: Radio(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      prefixIcon: Radio(
                         value: 3,
                         groupValue: correctOption,
-                        activeColor: Colors.blueGrey[700],
+                        activeColor: Colors.green[500],
                         onChanged: (newValue) {
                           setState(() {
                             correctOption = newValue;
@@ -113,10 +123,11 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 4',
-                      suffixIcon: Radio(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      prefixIcon: Radio(
                         value: 4,
                         groupValue: correctOption,
-                        activeColor: Colors.blueGrey[700],
+                        activeColor: Colors.green[500],
                         onChanged: (newValue) {
                           setState(() {
                             correctOption = newValue;
@@ -152,7 +163,7 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
     if (correctOption == 1)
       return _option1Controller.text.isEmpty;
     else if (correctOption == 2)
-      return _option4Controller.text.isEmpty;
+      return _option2Controller.text.isEmpty;
     else if (correctOption == 3)
       return _option3Controller.text.isEmpty;
     else

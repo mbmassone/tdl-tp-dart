@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               "Jugar",
               style: TextStyle(color: Colors.white),
             ),
-            color: Colors.blueGrey[700],
+            color: Constants.primaryGrey,
             onPressed: () => {
               Navigator.push(
                 context,
