@@ -80,7 +80,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                   _showDialogTemplate("¡Encuesta creada correctamente!",
                       "Ok");
                 }
-                //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS VALIDAS Y MANDAR AL SERVIDOR
+                //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS Y MANDAR AL SERVIDOR
               }),
         ],
       ),
