@@ -74,7 +74,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Hay preguntas en las cual no has marcado una única opción correcta'),
+        title: Text('Hay preguntas en las cual no has marcado su opción correcta'),
         content: RaisedButton(
           child: Text(
             "Volver",

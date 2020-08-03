@@ -103,22 +103,19 @@ class IndividualQuestionWidget extends StatefulWidget {
   }
 
   bool individualQuestionsWithCorrectOptionError(){
-    return _individualQuestion._individualQuestionsWithCorrectOptionError();
+    return _individualQuestion.noCorrectOptionSelected();
   }
 }
 
 class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
   int questionNumber;
-  TextEditingController _controller = TextEditingController();
-  TextEditingController _controller1 = TextEditingController();
-  TextEditingController _controller2 = TextEditingController();
-  TextEditingController _controller3 = TextEditingController();
-  TextEditingController _controller4 = TextEditingController();
+  TextEditingController _questionController = TextEditingController();
+  TextEditingController _option1Controller = TextEditingController();
+  TextEditingController _option2Controller = TextEditingController();
+  TextEditingController _option3Controller = TextEditingController();
+  TextEditingController _option4Controller = TextEditingController();
   
-  CorrectOptionButtonWidget _correctOptionButton1 = CorrectOptionButtonWidget();
-  CorrectOptionButtonWidget _correctOptionButton2 = CorrectOptionButtonWidget();
-  CorrectOptionButtonWidget _correctOptionButton3 = CorrectOptionButtonWidget();
-  CorrectOptionButtonWidget _correctOptionButton4 = CorrectOptionButtonWidget();
+  int correctOption = 0;
 
   _IndividualQuestionWidgetState(int questionNumber) {
     this.questionNumber = questionNumber;
@@ -132,7 +129,7 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
         child: Column(
           children: <Widget>[
             TextField(
-              controller: _controller,
+              controller: _questionController,
               obscureText: false,
               decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -144,30 +141,78 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
               margin: const EdgeInsets.only(right: 20, left: 20),
               child: Column(
                 children: <Widget>[
+                  
                   TextField(
-                      controller: _controller1,
+                      controller: _option1Controller,
                       obscureText: false,
                       decoration: InputDecoration(
                           labelText: 'Opción 1',
-                          suffixIcon: _correctOptionButton1)),
+                          suffixIcon: Radio(
+                            value: 1,
+                            groupValue: correctOption,
+                            activeColor: Colors.blueGrey[700],
+                            onChanged: (newValue){
+                              setState(() {
+                                correctOption = newValue;
+                              });
+                            },
+                          ),
+                        ),
+                  ),
+                  
                   TextField(
-                      controller: _controller2,
+                      controller: _option2Controller,
                       obscureText: false,
                       decoration: InputDecoration(
                           labelText: 'Opción 2',
-                          suffixIcon: _correctOptionButton2)),
+                          suffixIcon: Radio(
+                            value: 2,
+                            groupValue: correctOption,
+                            activeColor: Colors.blueGrey[700],
+                            onChanged: (newValue){
+                              setState(() {
+                                correctOption = newValue;
+                              });
+                            },
+                          ),
+                        ),
+                  ),
+                  
                   TextField(
-                      controller: _controller3,
+                      controller: _option3Controller,
                       obscureText: false,
                       decoration: InputDecoration(
                           labelText: 'Opción 3',
-                          suffixIcon: _correctOptionButton3)),
+                          suffixIcon: Radio(
+                            value: 3,
+                            groupValue: correctOption,
+                            activeColor: Colors.blueGrey[700],
+                            onChanged: (newValue){
+                              setState(() {
+                                correctOption = newValue;
+                              });
+                            },
+                          ),
+                        ),
+                  ),
+                  
                   TextField(
-                      controller: _controller4,
+                      controller: _option4Controller,
                       obscureText: false,
                       decoration: InputDecoration(
                           labelText: 'Opción 4',
-                          suffixIcon: _correctOptionButton4)),
+                          suffixIcon: Radio(
+                            value: 4,
+                            groupValue: correctOption,
+                            activeColor: Colors.blueGrey[700],
+                            onChanged: (newValue){
+                              setState(() {
+                                correctOption = newValue;
+                              });
+                            },
+                          ),
+                        ),
+                  ),
                 ],
               ),
             ),
@@ -179,87 +224,30 @@ class _IndividualQuestionWidgetState extends State<IndividualQuestionWidget> {
 
   bool _twoOptionsFull() {
     int optionsFull = 0;
-    if (_controller1.text.isNotEmpty) optionsFull++;
-    if (_controller2.text.isNotEmpty) optionsFull++;
-    if (_controller3.text.isNotEmpty) optionsFull++;
-    if (_controller4.text.isNotEmpty) optionsFull++;
+    if (_option1Controller.text.isNotEmpty) optionsFull++;
+    if (_option2Controller.text.isNotEmpty) optionsFull++;
+    if (_option3Controller.text.isNotEmpty) optionsFull++;
+    if (_option4Controller.text.isNotEmpty) optionsFull++;
 
     return (optionsFull >= 2);
   }
 
   bool _questionAndTwoOptionsFull() {
-    return (_controller.text.isNotEmpty && _twoOptionsFull());
+    return (_questionController.text.isNotEmpty && _twoOptionsFull());
   }
 
-  bool _controllerIsNotEmpty() {
-    return _controller.text.isNotEmpty;
+  bool emptyCorrectOptionSelected(int correctOption){
+    if(correctOption == 1)
+      return _option1Controller.text.isEmpty;
+    else if(correctOption == 2)
+      return _option4Controller.text.isEmpty;
+    else if(correctOption == 3)
+      return _option3Controller.text.isEmpty;
+    else
+      return _option4Controller.text.isEmpty;
   }
 
   bool noCorrectOptionSelected(){
-    return (!_correctOptionButton1.isCorrectOption() && 
-            !_correctOptionButton2.isCorrectOption() &&
-            !_correctOptionButton3.isCorrectOption() &&
-            !_correctOptionButton4.isCorrectOption() );
-  }
-
-  bool invalidAmountOfCorrectOptionsSelected(){
-    int totalOfCorrectOptions = 0;
-    if(_correctOptionButton1.isCorrectOption() && _controller1.text.isNotEmpty) totalOfCorrectOptions++;
-    if(_correctOptionButton2.isCorrectOption() && _controller2.text.isNotEmpty) totalOfCorrectOptions++;
-    if(_correctOptionButton3.isCorrectOption() && _controller3.text.isNotEmpty) totalOfCorrectOptions++;
-    if(_correctOptionButton4.isCorrectOption() && _controller4.text.isNotEmpty) totalOfCorrectOptions++;
-
-    return (totalOfCorrectOptions != 1);
-  }
-
-  bool _individualQuestionsWithCorrectOptionError(){
-    return (invalidAmountOfCorrectOptionsSelected() || noCorrectOptionSelected());
-  }
-}
-
-
-
-
-
-
-
-
-class CorrectOptionButtonWidget extends StatefulWidget {
-  _CorrectOptionButtonWidgetState correctOptionButton;
-
-  @override
-  State<CorrectOptionButtonWidget> createState() => correctOptionButton = _CorrectOptionButtonWidgetState();
-
-  bool isCorrectOption(){
-    return correctOptionButton._isCorrectOption();
-  }
-
-}
-
-class _CorrectOptionButtonWidgetState extends State<CorrectOptionButtonWidget> {
-  Icon _icon = Icon(Icons.clear);
-  bool correctOption = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-        icon: _icon,
-        onPressed: () {
-          _setState();
-        });
-  }
-
-  void _setState() {
-    if (correctOption)
-      _icon = Icon(Icons.clear);
-    else
-      _icon = Icon(Icons.check);
-
-    correctOption = !correctOption;
-    setState(() {});
-  }
-
-  bool _isCorrectOption(){
-    return correctOption;
+    return ( (correctOption == 0) || emptyCorrectOptionSelected(correctOption) );
   }
 }
