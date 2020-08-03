@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class NewQuestionWidget extends StatefulWidget {
   int questionNumber;
-
   _NewQuestionWidgetState _newQuestion;
 
   NewQuestionWidget(int questionNumber) {
@@ -50,7 +49,6 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
                 controller: _questionController,
                 obscureText: false,
                 decoration: InputDecoration(
-                  //border: OutlineInputBorder(),
                   labelText: "Pregunta $questionNumber",
                   contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
                   prefixIcon: Icon(
@@ -69,7 +67,8 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 1',
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 0.01),
                       prefixIcon: Radio(
                         value: 1,
                         groupValue: correctOption,
@@ -87,7 +86,8 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 2',
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 0.01),
                       prefixIcon: Radio(
                         value: 2,
                         groupValue: correctOption,
@@ -105,7 +105,8 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 3',
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 0.01),
                       prefixIcon: Radio(
                         value: 3,
                         groupValue: correctOption,
@@ -123,7 +124,8 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Opción 4',
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0.01),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 0.01),
                       prefixIcon: Radio(
                         value: 4,
                         groupValue: correctOption,

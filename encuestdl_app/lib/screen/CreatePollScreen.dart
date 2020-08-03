@@ -3,7 +3,6 @@ import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class CreatePollScreen extends StatefulWidget {
   @override
@@ -21,68 +20,17 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
   Widget build(BuildContext context) {
     return ScreenTemplate(
       title: "Crear encuesta",
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: Constants.primaryGrey,
-        children: [
-          SpeedDialChild(
-            child: Icon(Icons.add),
-            backgroundColor: Constants.primaryGrey,
-            label: "Agregar otra pregunta",
-            onTap: () {
-              if (_allQuestionFull())
-                _addNewQuestion();
-              else
-                _showDialogTemplate(
-                    "Las preguntas actuales deben estar completas para agregar una nueva",
-                    "Ok");
-            },
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.restore_from_trash),
-            backgroundColor: Constants.primaryGrey,
-            label: "Eliminar última pregunta",
-            onTap: () {
-              if (_list.length != 1) _removeLastQuestion();
-            },
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.settings_backup_restore),
-            backgroundColor: Constants.primaryGrey,
-            label: "Volver al inicio",
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          SpeedDialChild(
-              child: Icon(Icons.check),
-              backgroundColor: Constants.primaryGrey,
-              label: "Finalizar encuesta",
-              onTap: () {
-                if (_namePollController.text.isEmpty)
-                  _showDialogTemplate(
-                      "Debes ponerle un nombre a tu encuesta", "Ok");
-                else if (_noQuestions() || _noOneQuestionFull())
-                  _showDialogTemplate(
-                      "La encuesta debe tener al menos una pregunta completa",
-                      "Ok");
-                else if (_questionsWithCorrectOptionError())
-                  _showDialogTemplate(
-                      "Hay preguntas en las cual no has marcado su opción correcta",
-                      "Ok");
-                else if (!_allQuestionFull())
-                  _showDialogTemplate(
-                      "Todas las preguntas deben estar completas para crear la encuesta",
-                      "Ok");
-                else {
-                  Navigator.pop(context);
-                  _showDialogTemplate("¡Encuesta creada correctamente!",
-                      "Ok");
-                }
-                //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS Y MANDAR AL SERVIDOR
-              }),
-        ],
-      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          backgroundColor: Constants.primaryGrey,
+          onPressed: () {
+            if (_allQuestionFull())
+              _addNewQuestion();
+            else
+              _showDialogTemplate(
+                  "Las preguntas actuales deben estar completas para agregar una nueva",
+                  "Ok");
+          }),
       child: ListView(
         children: <Widget>[
           Card(
@@ -124,6 +72,40 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                         ),
                       ),
                       for (var i in _list) i,
+                      Align(
+                        alignment: Alignment.center,
+                        child: RaisedButton(
+                            color: Colors.white,
+                            child: Text(
+                              "Finalizar",
+                              textScaleFactor: 1.3,
+                              style: TextStyle(color: Constants.primaryGrey),
+                            ),
+                            onPressed: () {
+                              if (_namePollController.text.isEmpty)
+                                _showDialogTemplate(
+                                    "Debes ponerle un nombre a tu encuesta",
+                                    "Ok");
+                              else if (_noQuestions() || _noOneQuestionFull())
+                                _showDialogTemplate(
+                                    "La encuesta debe tener al menos una pregunta completa",
+                                    "Ok");
+                              else if (_questionsWithCorrectOptionError())
+                                _showDialogTemplate(
+                                    "Hay preguntas en las cual no has marcado su opción correcta",
+                                    "Ok");
+                              else if (!_allQuestionFull())
+                                _showDialogTemplate(
+                                    "Todas las preguntas deben estar completas para crear la encuesta",
+                                    "Ok");
+                              else {
+                                Navigator.pop(context);
+                                _showDialogTemplate(
+                                    "¡Encuesta creada correctamente!", "Ok");
+                              }
+                              //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS Y MANDAR AL SERVIDOR
+                            }),
+                      ),
                     ],
                   ),
                 ),
@@ -137,11 +119,6 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
 
   void _addNewQuestion() {
     _list.add(NewQuestionWidget(_list.length + 1));
-    setState(() {});
-  }
-
-  void _removeLastQuestion() {
-    _list.removeLast();
     setState(() {});
   }
 

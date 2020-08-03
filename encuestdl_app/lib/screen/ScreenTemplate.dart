@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 
 class ScreenTemplate extends StatelessWidget {
   Widget child;
-  Widget fab;
+  FloatingActionButton fab;
   String title;
 
-
   ScreenTemplate(
-      {Widget child, Widget floatingActionButton, String title}) {
+      {Widget child, FloatingActionButton floatingActionButton, String title}) {
     this.child = child;
     this.fab = floatingActionButton;
     this.title = title;
