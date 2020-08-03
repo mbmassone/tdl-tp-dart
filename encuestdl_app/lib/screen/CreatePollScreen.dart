@@ -12,7 +12,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
   TextEditingController _namePollController = TextEditingController();
   List<IndividualQuestionWidget> _list = List();
 
-  _CreatePollScreenState(){
+  _CreatePollScreenState() {
     this._list.add(IndividualQuestionWidget(_list.length + 1));
   }
   @override
@@ -94,6 +94,11 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     );
   }
 
+  void _addNewQuestion() {
+    _list.add(IndividualQuestionWidget(_list.length + 1));
+    setState(() {});
+  }
+
   Future _noNameShowDialog() {
     return showDialog(
       context: context,
@@ -112,12 +117,23 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     );
   }
 
-  Future _questionsWithCorrectOptionErrorShowDialog() {
+  bool _noQuestions() {
+    return (_list.length == 0);
+  }
+
+  bool _noOneQuestionFull() {
+    bool returnValue = true;
+
+    for (var i in _list) if (i.questionAndTwoOptionsFull()) returnValue = false;
+
+    return returnValue;
+  }
+
+  Future _noQuestionsShowDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title:
-            Text('Hay preguntas en las cual no has marcado su opción correcta'),
+        title: Text('La encuesta debe tener al menos una pregunta completa'),
         content: RaisedButton(
           child: Text(
             "Volver",
@@ -131,11 +147,22 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     );
   }
 
-  Future _noQuestionsShowDialog() {
+  bool _questionsWithCorrectOptionError() {
+    bool returnValue = false;
+
+    for (var i in _list)
+      if (i.questionAndTwoOptionsFull()) if (i
+          .individualQuestionsWithCorrectOptionError()) returnValue = true;
+
+    return returnValue;
+  }
+
+  Future _questionsWithCorrectOptionErrorShowDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('La encuesta debe tener al menos una pregunta completa'),
+        title:
+            Text('Hay preguntas en las cual no has marcado su opción correcta'),
         content: RaisedButton(
           child: Text(
             "Volver",
@@ -166,32 +193,5 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
         ),
       ),
     );
-  }
-
-  bool _noQuestions() {
-    return (_list.length == 0);
-  }
-
-  bool _noOneQuestionFull() {
-    bool returnValue = true;
-
-    for (var i in _list) if (i.questionAndTwoOptionsFull()) returnValue = false;
-
-    return returnValue;
-  }
-
-  bool _questionsWithCorrectOptionError() {
-    bool returnValue = false;
-
-    for (var i in _list)
-      if (i.questionAndTwoOptionsFull()) if (i
-          .individualQuestionsWithCorrectOptionError()) returnValue = true;
-
-    return returnValue;
-  }
-
-  void _addNewQuestion() {
-    _list.add(IndividualQuestionWidget(_list.length + 1));
-    setState(() {});
   }
 }
