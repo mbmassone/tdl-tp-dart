@@ -20,6 +20,18 @@ class NewQuestionWidget extends StatefulWidget {
   bool questionsWithCorrectOptionError() {
     return _newQuestion.noCorrectOptionSelected();
   }
+
+  String getQuestion(){
+    return _newQuestion._getQuestion();
+  }
+
+  List<String> getOptions(){
+    return _newQuestion._getOptions();
+  }
+
+  int getCorrectOption(){
+    return _newQuestion._getCorrectOption();
+  }
 }
 
 class _NewQuestionWidgetState extends State<NewQuestionWidget> {
@@ -174,5 +186,53 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
 
   bool noCorrectOptionSelected() {
     return ((correctOption == 0) || emptyCorrectOptionSelected(correctOption));
+  }
+
+  String _getQuestion(){
+    return _questionController.text;
+  }
+
+  List<String> _getOptions(){
+    List<String> returnList;
+    if(_option1Controller.text.isNotEmpty)
+      returnList.add(_option1Controller.text);
+    
+    if(_option2Controller.text.isNotEmpty)
+      returnList.add(_option2Controller.text);
+    
+    if(_option3Controller.text.isNotEmpty)
+      returnList.add(_option3Controller.text);
+    
+    if(_option4Controller.text.isNotEmpty)
+      returnList.add(_option4Controller.text);
+
+    return returnList;    
+  }
+
+  int _getCorrectOption(){
+    return _correctOptionChecked();
+  }
+
+  int _correctOptionChecked(){
+    if(correctOption == 2 && _option1Controller.text.isEmpty)
+      return 1;
+    
+    else if(correctOption == 3 && _option1Controller.text.isEmpty && _option2Controller.text.isEmpty)
+      return 1;
+    
+    else if(correctOption == 3 && (_option1Controller.text.isEmpty || _option2Controller.text.isEmpty))
+      return 2;
+    
+    else if(correctOption == 4 && ( 
+      (_option1Controller.text.isEmpty && _option2Controller.text.isEmpty) ||
+      (_option2Controller.text.isEmpty && _option3Controller.text.isEmpty) ||
+      (_option1Controller.text.isEmpty && _option3Controller.text.isEmpty)))
+      return 2;
+    
+    else if(correctOption == 4 && (_option1Controller.text.isEmpty || _option2Controller.text.isEmpty || _option3Controller.text.isEmpty))
+      return 3;
+    
+    else
+      return correctOption;
   }
 }

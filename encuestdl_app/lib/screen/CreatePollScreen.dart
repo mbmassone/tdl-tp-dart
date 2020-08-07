@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:encuestdl_app/constants/constants.dart';
+import 'package:encuestdl_app/model/Submit.dart';
 import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:encuestdl_app/widget/NewQuestionWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class CreatePollScreen extends StatefulWidget {
   @override
@@ -81,7 +85,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                               textScaleFactor: 1.3,
                               style: TextStyle(color: Constants.primaryGrey),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_namePollController.text.isEmpty)
                                 _showDialogTemplate(
                                     "Debes ponerle un nombre a tu encuesta",
@@ -99,11 +103,10 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                                     "Todas las preguntas deben estar completas para crear la encuesta",
                                     "Ok");
                               else {
+                                //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS Y MANDAR AL SERVIDOR Y MOSTRARLE EL ID AL USUARIO
+                                await _createNewPoll();
                                 Navigator.pop(context);
-                                _showDialogTemplate(
-                                    "¡Encuesta creada correctamente!", "Ok");
                               }
-                              //TODO ACA DEBERIAMOS GUARDAS LAS PREGUNTAS Y MANDAR AL SERVIDOR
                             }),
                       ),
                     ],
@@ -115,6 +118,55 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
         ],
       ),
     );
+  }
+
+  Future _createNewPoll() async {
+    //////////////////////////ZONA DE PRUEBA//////////////////////////////////////////////////////
+    
+    //final response = await http.post(Constants.baseUrl + '/polls',  body: {"name": _namePollController.text});
+    final createPollResponse = await http.get(Constants.baseUrl + '/poll/3');
+
+    if (createPollResponse.statusCode == 200) {
+      String id = _getId(createPollResponse.body);
+      //_uploadQuestions(id);
+      
+      int correctOption = 1;
+      List<String> options = ["si", "no", "tal vez", "absolutamente"]; 
+      
+      final addOptionResponse = await http.post(Constants.baseUrl + '/questions', body: json.encode({
+        "value": "Pregunta",
+        "options": options,
+        "correct": correctOption.toString(),
+        "poll": "3"
+      }));
+
+      print(addOptionResponse.statusCode);
+
+      //////////////////////////////////////////////////////////////////////////////
+      return _showDialogTemplate(
+          "¡Encuesta creada correctamente!\n\n ID: $id", "Ok");
+    } else
+      return _showDialogTemplate("¡Error al crear la encuesta", "Ok");
+  }
+
+  String _getId(String body) {
+    int i = 6;
+    String aux = '';
+    while (body[i] != ',') {
+      aux = aux + body[i];
+      i++;
+    }
+    return aux;
+  }
+
+  _uploadQuestions(String id) async {
+    for (var i in _list)
+      await http.post(Constants.baseUrl + '/questions', body: {
+        "value": i.getQuestion(),
+        "options": i.getOptions(),
+        "correct": (i.getCorrectOption()).toString(),
+        "poll": id
+      });
   }
 
   void _addNewQuestion() {
