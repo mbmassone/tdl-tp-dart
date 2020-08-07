@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:encuestdl_app/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class NewQuestionWidget extends StatefulWidget {
   int questionNumber;
@@ -21,16 +25,8 @@ class NewQuestionWidget extends StatefulWidget {
     return _newQuestion.noCorrectOptionSelected();
   }
 
-  String getQuestion(){
-    return _newQuestion._getQuestion();
-  }
-
-  List<String> getOptions(){
-    return _newQuestion._getOptions();
-  }
-
-  int getCorrectOption(){
-    return _newQuestion._getCorrectOption();
+  uploadQuestion(String id){
+    return _newQuestion._uploadQuestion(id);
   }
 }
 
@@ -41,7 +37,6 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
   TextEditingController _option2Controller = TextEditingController();
   TextEditingController _option3Controller = TextEditingController();
   TextEditingController _option4Controller = TextEditingController();
-
   int correctOption = 0;
 
   _NewQuestionWidgetState(int questionNumber) {
@@ -188,12 +183,8 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
     return ((correctOption == 0) || emptyCorrectOptionSelected(correctOption));
   }
 
-  String _getQuestion(){
-    return _questionController.text;
-  }
-
   List<String> _getOptions(){
-    List<String> returnList;
+    List<String> returnList = List();
     if(_option1Controller.text.isNotEmpty)
       returnList.add(_option1Controller.text);
     
@@ -207,10 +198,6 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
       returnList.add(_option4Controller.text);
 
     return returnList;    
-  }
-
-  int _getCorrectOption(){
-    return _correctOptionChecked();
   }
 
   int _correctOptionChecked(){
@@ -234,5 +221,17 @@ class _NewQuestionWidgetState extends State<NewQuestionWidget> {
     
     else
       return correctOption;
+  }
+
+  _uploadQuestion(String id) async{
+    final addOptionResponse =
+          await http.post(Constants.baseUrl + '/questions',
+              headers: {"Content-Type": "application/json"},
+              body: json.encode({
+                "value": _questionController.text,
+                "options": _getOptions(),
+                "correct": _correctOptionChecked().toString(),
+                "poll": id
+              }));
   }
 }
