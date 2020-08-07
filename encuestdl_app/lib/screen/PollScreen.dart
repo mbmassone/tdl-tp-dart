@@ -2,80 +2,91 @@ import 'dart:convert';
 
 import 'package:encuestdl_app/constants/constants.dart';
 import 'package:encuestdl_app/model/Poll.dart';
+import 'package:encuestdl_app/model/Question.dart';
 import 'package:encuestdl_app/model/Submit.dart';
 import 'package:encuestdl_app/screen/ScreenTemplate.dart';
 import 'package:encuestdl_app/widget/QuestionWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'PollFinishScreen.dart';
+
 class PollScreen extends StatefulWidget {
   int id;
+  String name;
 
-  PollScreen(int id) {
+  PollScreen(int id, String name) {
     this.id = id;
+    this.name = name;
   }
 
   @override
-  State createState() => _PollScreenState(id);
+  State createState() => _PollScreenState(id, name);
 }
 
 class _PollScreenState extends State<PollScreen> {
-  _PollScreenState(int id) {
+  _PollScreenState(int id, String name) {
     this.id = id;
+    this.name = name;
   }
 
   int id;
-  int actualQuestion = 0;
-  bool answered = false;
+  String name;
+  bool _answered = false;
 
   Future<Poll> futurePoll;
+  Future<Submit> futureSubmit;
+  final GlobalKey<QuestionWidgetState> _questionStatekey = GlobalKey();
+  int _questionIndex = 0;
   Poll _poll;
   Submit _submit;
-
-  Future<bool> futureQuestionAnswered;
-  bool _questionAnswered;
 
   @override
   void initState() {
     super.initState();
     futurePoll = fetchPoll();
-    createNewSubmit();
-  }
-  Future<void> createNewSubmit() async{
-    final newSubitResponse = await http.post( Constants.baseUrl + '/submits', body:{
-      "submitter": "anonymous", //TODO: Create input to get submitter name.
-      "poll": this.id.toString()
-    });
-
-    _submit =  Submit.fromJson(json.decode(newSubitResponse.body));
-    print(json.decode(newSubitResponse.body));
   }
 
   Future<Poll> fetchPoll() async {
-    final response =
-        await http.get(Constants.baseUrl + '/poll/${this.id}');
+    final response = await http.get(Constants.baseUrl + '/poll/${this.id}');
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
+
       _poll = Poll.fromJson(json.decode(response.body));
+      futureSubmit = createNewSubmit();
       return _poll;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load poll');
     }
   }
 
-  Future<bool> _checkAnswer(int answer) async {
-    // TODO: Corregir este servicio, el body debe ser un json
+  Future<Submit> createNewSubmit() async {
+    final response = await http.post(Constants.baseUrl + '/submits',
+        body: {"submitter": name, "poll": this.id.toString()});
 
-    final response = await http
-        .patch(Constants.baseUrl + '/submit/${_submit.id}',body: {"response": (answer + 1).toString()});
+    _submit = Submit.fromJson(json.decode(response.body));
+    return _submit;
   }
 
-  _handleQuestionAnswered(int answer) {
-    _checkAnswer(answer);
+  void onAnswered() {
+    setState(() {
+      _answered = true;
+    });
+  }
+
+  void nextQuestion() {
+    if (_questionIndex + 1 < _poll.questions.length) {
+      setState(() {
+        _answered = false;
+        _questionIndex++;
+      });
+      _questionStatekey.currentState.updateQuestion(_poll.questions[_questionIndex]);
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => PollFinishScreen()));
+    }
   }
 
   @override
@@ -85,7 +96,25 @@ class _PollScreenState extends State<PollScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ScreenTemplate(
-              child: QuestionWidget(_poll.questions[actualQuestion],_handleQuestionAnswered,)
+              child: Container(
+                  child: FutureBuilder<Submit>(
+                    future: futureSubmit,
+                    builder: (context, snapshot) {
+                      return snapshot.hasData
+                          ? QuestionWidget(
+                          key: _questionStatekey,
+                          question: _poll.questions[_questionIndex],
+                          submit: _submit,
+                          notifyAnswered: onAnswered)
+                          : Center(child: CircularProgressIndicator());
+                    },
+                  )),
+              floatingActionButton: _answered
+                  ? FloatingActionButton(
+                  onPressed: nextQuestion,
+                  backgroundColor: Constants.primaryGrey,
+                  child: const Icon(Icons.arrow_right))
+                  : null,
             );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
@@ -94,7 +123,7 @@ class _PollScreenState extends State<PollScreen> {
           // By default, show a loading spinner.
           return ScreenTemplate(
               child:
-                  Container(child: Center(child: CircularProgressIndicator())));
+              Container(child: Center(child: CircularProgressIndicator())));
         });
   }
 }

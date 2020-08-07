@@ -1,50 +1,75 @@
+import 'dart:convert';
+
+import 'package:encuestdl_app/constants/constants.dart';
+import 'package:encuestdl_app/model/Question.dart';
+import 'package:encuestdl_app/model/Submit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:encuestdl_app/model/Question.dart';
+import 'package:http/http.dart' as http;
 
 class QuestionWidget extends StatefulWidget {
-  Question question;
-  Future<bool> futureQuestionAnswered;
-  final ValueChanged<int> submitAction;
+  final Question question;
+  final Submit submit;
+  final Function() notifyAnswered;
 
-  QuestionWidget.withFuture(
-      Question question, Future<bool> future, this.submitAction) {
-    this.question = question;
-    this.futureQuestionAnswered = future;
-  }
-
-  QuestionWidget(Question question, this.submitAction) {
-    this.question = question;
-  }
+  QuestionWidget(
+      {Key key,
+      @required this.notifyAnswered,
+      @required this.question,
+      @required this.submit})
+      : super(key: key);
 
   @override
-  State<QuestionWidget> createState() => _QuestionWidgetState(question);
+  State<QuestionWidget> createState() => QuestionWidgetState(question, submit);
 }
 
-class _QuestionWidgetState extends State<QuestionWidget> {
+class QuestionWidgetState extends State<QuestionWidget> {
   Question _question;
-  String _selectedAnswer;
-  Future<bool> futureQuestionAnswered;
+  Submit _submit;
+  bool _correct;
+  int _selected;
+  bool _answered = false;
 
-  _QuestionWidgetState.withFuture(Question question, Future<bool> future) {
+  Future<bool> _futureCorrect;
+
+  QuestionWidgetState(Question question, Submit submit) {
     this._question = question;
-    this.futureQuestionAnswered = future;
+    this._submit = submit;
   }
 
-  _QuestionWidgetState(Question question) {
-    this._question = question;
-  }
-
-  void _updateSelected(String selected) {
+  void onAnswer(int index) {
     setState(() {
-      _selectedAnswer = selected;
+      _answered = true;
+      _selected = index;
+      _futureCorrect = _checkAnswer(index + 1);
     });
   }
 
-  void _submit() {
-    if (_selectedAnswer != null) {
-      widget.submitAction(_question.options.indexOf(_selectedAnswer));
+  void updateQuestion(Question question) {
+    setState(() {
+      _question = question;
+      _selected = null;
+      _correct = null;
+      _futureCorrect = null;
+      _answered = false;
+    });
+  }
+
+  Future<bool> _checkAnswer(int id) async {
+    final response = await http.patch(
+        Constants.baseUrl + '/submit/${_submit.id}',
+        body: {"response": (id).toString()});
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      setState(() {
+        _correct = jsonResponse["correct"];
+      });
+
+      widget.notifyAnswered();
+      return _correct;
+    } else {
+      throw Exception('Failed to check answer');
     }
   }
 
@@ -65,24 +90,81 @@ class _QuestionWidgetState extends State<QuestionWidget> {
         Container(
           child: Column(
             children: <Widget>[
-              for (String option in _question.options)
-                ListTile(
-                  title: Text(option),
-                  leading: Radio(
-                    value: option,
-                    //EL METODO _handleOnPressed se implementa en el padre :D!
-                    groupValue: _selectedAnswer,
-                    onChanged: _updateSelected,
-                  ),
-                ),
-              RaisedButton(
-                onPressed: _submit,
-                child: Text('Confirmar', style: TextStyle(fontSize: 20)),
-              )
+              _answered
+                  ? FutureBuilder<bool>(
+                      future: _futureCorrect,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            children: <Widget>[
+                              for (var i = 0; i < _question.options.length; i++)
+                                AnswerWidget(
+                                  option: _question.options[i],
+                                  index: i,
+                                  correct: _correct,
+                                  selected: (i == _selected),
+                                  answered: _answered,
+                                )
+                            ],
+                          );
+                        } else
+                          return Container(
+                              child:
+                                  Center(child: CircularProgressIndicator()));
+                      },
+                    )
+                  : Column(children: <Widget>[
+                      for (var i = 0; i < _question.options.length; i++)
+                        AnswerWidget(
+                            option: _question.options[i],
+                            index: i,
+                            onAnswer: onAnswer)
+                    ])
             ],
           ),
         ),
       ],
     );
+  }
+}
+
+class AnswerWidget extends StatelessWidget {
+  final String option;
+  final int index;
+  final bool correct;
+  final bool selected;
+  final bool answered;
+  final ValueChanged<int> onAnswer;
+
+  AnswerWidget(
+      {Key key,
+      @required this.option,
+      @required this.index,
+      this.onAnswer,
+      this.correct,
+      this.answered: false,
+      this.selected})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (!answered)
+      return GestureDetector(
+          onTap: () => {this.onAnswer(index)},
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Center(child: Text(option)),
+            ),
+          ));
+    else
+      return Card(
+        color: selected ? (correct ? Colors.green : Colors.red) : null,
+        child: Center(
+            child: Text(
+          option,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+      );
   }
 }
