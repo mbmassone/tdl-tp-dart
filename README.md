@@ -19,3 +19,10 @@ Listado de software/herramientas necesarias para el proyecto
 Dart
 Flutter SDK
 ```
+
+
+## Sobre la aplicación
+EncuesTDL es una aplicación que te permite crear y jugar encuestas con respuestas correctas compitiendo con tus amigos.
+
+![alt text](https://github.com/mbmassone/tdl-tp-dart/blob/master/Screenshots/inicio.jpg)
+![alt text](https://github.com/mbmassone/tdl-tp-dart/blob/master/Screenshots/crear%20encuesta.jpg)
